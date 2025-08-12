@@ -1,125 +1,254 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nicolás Kappes - Ingeniero en Sistemas</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- AOS Animations -->
-    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
-    <style>
-        /* Gradiente animado de fondo */
-        body {
-            background: linear-gradient(-45deg, #0f172a, #1e3a8a, #1e40af, #3b82f6);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
-            color: white;
-        }
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nicolás Kappes - Ingeniero en Sistemas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- AOS Animations -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <style>
+    /* ===== Fondo con gradiente animado ===== */
+    body {
+      background: linear-gradient(-45deg, #0f172a, #1e3a8a, #1e40af, #3b82f6);
+      background-size: 400% 400%;
+      animation: gradient 15s ease infinite;
+      color: white;
+      cursor: none; /* ocultamos el cursor nativo en desktop para el efecto */
+    }
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ===== Cursor personalizado: glow + punto ===== */
+    .nk-cursor-glow,
+    .nk-cursor-dot {
+      position: fixed;
+      top: 0; left: 0;
+      pointer-events: none;
+      z-index: 50; /* por encima del contenido pero debajo del header sticky (z-50 en Tailwind equivale a 50) */
+    }
+
+    /* Círculo grande difuminado con mezcla para efecto "blob" / spotlight */
+    .nk-cursor-glow {
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.6;
+      transform: translate(-50%, -50%);
+      /* Combina con el fondo para un look moderno; si preferís más contraste probá difference/screen */
+      mix-blend-mode: screen;
+      background: radial-gradient(circle at center, rgba(59,130,246,0.9), rgba(59,130,246,0.35) 45%, rgba(30,64,175,0.2) 70%, rgba(15,23,42,0) 80%);
+    }
+
+    /* Punto central para precisión visual */
+    .nk-cursor-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 0 10px rgba(255,255,255,0.8);
+      transform: translate(-50%, -50%);
+      transition: transform 0.15s ease;
+    }
+
+    /* Estados interactivos */
+    .nk-cursor-dot.is-clicking { transform: translate(-50%, -50%) scale(0.75); }
+    .nk-cursor-dot.is-hidden, .nk-cursor-glow.is-hidden { opacity: 0; }
+
+    /* Accesibilidad: si el usuario prefiere menos movimiento */
+    @media (prefers-reduced-motion: reduce) {
+      body { animation: none; }
+      .nk-cursor-glow { transition: none; }
+    }
+
+    /* En pantallas táctiles mostramos el cursor normal y ocultamos el efecto */
+    .is-touch body, .is-touch { cursor: auto !important; }
+    .is-touch .nk-cursor-glow, .is-touch .nk-cursor-dot { display: none !important; }
+  </style>
 </head>
 <body class="font-sans">
+  <!-- Capas del cursor personalizado -->
+  <div class="nk-cursor-glow" aria-hidden="true"></div>
+  <div class="nk-cursor-dot" aria-hidden="true"></div>
 
-    <!-- Header -->
-    <header class="bg-blue-800 bg-opacity-80 p-6 flex justify-between items-center sticky top-0 shadow-lg backdrop-blur-md z-50">
-        <h1 class="text-2xl font-bold" data-aos="fade-right">Nicolás Kappes</h1>
-        <nav class="space-x-6" data-aos="fade-left">
-            <a href="#sobre-mi" class="hover:text-blue-300 transition">Sobre mí</a>
-            <a href="#proyectos" class="hover:text-blue-300 transition">Proyectos</a>
-            <a href="#contacto" class="hover:text-blue-300 transition">Contacto</a>
-        </nav>
-    </header>
+  <!-- Header -->
+  <header class="bg-blue-800/80 p-6 flex justify-between items-center sticky top-0 shadow-lg backdrop-blur-md z-50">
+    <h1 class="text-2xl font-bold" data-aos="fade-right">Nicolás Kappes</h1>
+    <nav class="space-x-6" data-aos="fade-left">
+      <a href="#sobre-mi" class="hover:text-blue-300 transition" data-magnetic>Sobre mí</a>
+      <a href="#proyectos" class="hover:text-blue-300 transition" data-magnetic>Proyectos</a>
+      <a href="#contacto" class="hover:text-blue-300 transition" data-magnetic>Contacto</a>
+    </nav>
+  </header>
 
-    <!-- Presentación -->
-    <section class="text-center py-20 px-6" data-aos="zoom-in">
-        <h2 class="text-4xl font-bold mb-4">Ingeniero en Sistemas de Información</h2>
-        <p class="text-lg max-w-2xl mx-auto mb-6">
-            Combino tecnología, creatividad y pensamiento crítico para crear soluciones innovadoras.  
-            Me apasiona el desarrollo web, la programación en Python, la impresión 3D y la docencia.
-        </p>
-        <a href="#contacto" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg transition transform hover:scale-105">
-            Hablemos
-        </a>
-    </section>
+  <!-- Presentación -->
+  <section class="text-center py-20 px-6" data-aos="zoom-in">
+    <h2 class="text-4xl font-bold mb-4">Ingeniero en Sistemas de Información</h2>
+    <p class="text-lg max-w-2xl mx-auto mb-6">
+      Combino tecnología, creatividad y pensamiento crítico para crear soluciones innovadoras.
+      Me apasiona el desarrollo web, la programación en Python, la impresión 3D y la docencia.
+    </p>
+    <a href="#contacto" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg transition transform hover:scale-105" data-magnetic>
+      Hablemos
+    </a>
+  </section>
 
-    <!-- Sobre mí -->
-    <section id="sobre-mi" class="bg-blue-800 bg-opacity-60 py-16 px-6">
-        <div class="max-w-4xl mx-auto" data-aos="fade-up">
-            <h3 class="text-3xl font-bold mb-6 border-b-2 border-blue-400 pb-2">Sobre mí</h3>
-            <p class="mb-4">
-                Soy Nicolás Kappes, Ingeniero en Sistemas de Información y estudiante avanzado de Psicología (me faltan solo tres materias para recibirme).  
-                Me interesa la tecnología aplicada al desarrollo humano, la enseñanza de la programación y la creación de herramientas digitales con impacto real.
-            </p>
-            <p>
-                He desarrollado sistemas web con funcionalidades como pedidos en línea con pago integrado, paneles de administración,  
-                y aplicaciones interactivas como juegos educativos en Python con Tkinter.  
-                También gestiono un emprendimiento de impresión 3D.
-            </p>
-        </div>
-    </section>
+  <!-- Sobre mí -->
+  <section id="sobre-mi" class="bg-blue-800/60 py-16 px-6">
+    <div class="max-w-4xl mx-auto" data-aos="fade-up">
+      <h3 class="text-3xl font-bold mb-6 border-b-2 border-blue-400 pb-2">Sobre mí</h3>
+      <p class="mb-4">
+        Soy Nicolás Kappes, Ingeniero en Sistemas de Información y estudiante avanzado de Psicología (me faltan solo tres materias para recibirme).
+        Me interesa la tecnología aplicada al desarrollo humano, la enseñanza de la programación y la creación de herramientas digitales con impacto real.
+      </p>
+      <p>
+        He desarrollado sistemas web con funcionalidades como pedidos en línea con pago integrado y panel de administración,
+        además de aplicaciones interactivas como juegos educativos en Python con Tkinter. También gestiono un emprendimiento de impresión 3D.
+      </p>
+    </div>
+  </section>
 
-    <!-- Proyectos -->
-    <section id="proyectos" class="py-16 px-6">
-        <div class="max-w-5xl mx-auto">
-            <h3 class="text-3xl font-bold mb-6 border-b-2 border-blue-400 pb-2" data-aos="fade-up">Proyectos</h3>
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="bg-blue-700 p-6 rounded-lg shadow-lg hover:scale-105 transition transform" data-aos="fade-right">
-                    <h4 class="text-xl font-bold mb-2">Plataforma de pedidos en línea</h4>
-                    <p>Web para un emprendimiento de impresión 3D con pedidos y pagos online, y panel de administración para gestión de pedidos.</p>
-                </div>
-                <div class="bg-blue-700 p-6 rounded-lg shadow-lg hover:scale-105 transition transform" data-aos="fade-left">
-                    <h4 class="text-xl font-bold mb-2">Juego interactivo en Python</h4>
-                    <p>Juego con preguntas de cultura general y acciones aleatorias, desarrollado con interfaz gráfica en Tkinter.</p>
-                </div>
-                <div class="bg-blue-700 p-6 rounded-lg shadow-lg hover:scale-105 transition transform" data-aos="fade-right">
-                    <h4 class="text-xl font-bold mb-2">Aplicaciones web con Flask</h4>
-                    <p>Desarrollo de APIs, envío de correos automáticos y herramientas internas para optimizar flujos de trabajo.</p>
-                </div>
-                <div class="bg-blue-700 p-6 rounded-lg shadow-lg hover:scale-105 transition transform" data-aos="fade-left">
-                    <h4 class="text-xl font-bold mb-2">Proyectos educativos</h4>
-                    <p>Diseño de juegos y actividades para enseñar programación a ingresantes de carreras tecnológicas.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+  <!-- Proyectos -->
+  <section id="proyectos" class="py-16 px-6">
+    <div class="max-w-5xl mx-auto">
+      <h3 class="text-3xl font-bold mb-6 border-b-2 border-blue-400 pb-2" data-aos="fade-up">Proyectos</h3>
+      <div class="grid md:grid-cols-2 gap-8">
+        <article class="bg-blue-700 p-6 rounded-2xl shadow-lg hover:scale-105 transition transform" data-aos="fade-right" data-magnetic>
+          <h4 class="text-xl font-bold mb-2">Plataforma de pedidos en línea</h4>
+          <p>Web para un emprendimiento de impresión 3D con pedidos y pagos online, y panel de administración para gestión de pedidos.</p>
+        </article>
+        <article class="bg-blue-700 p-6 rounded-2xl shadow-lg hover:scale-105 transition transform" data-aos="fade-left" data-magnetic>
+          <h4 class="text-xl font-bold mb-2">Juego interactivo en Python</h4>
+          <p>Juego con preguntas de cultura general y acciones aleatorias, desarrollado con interfaz gráfica en Tkinter.</p>
+        </article>
+        <article class="bg-blue-700 p-6 rounded-2xl shadow-lg hover:scale-105 transition transform" data-aos="fade-right" data-magnetic>
+          <h4 class="text-xl font-bold mb-2">Aplicaciones web con Flask</h4>
+          <p>Desarrollo de APIs, envío de correos automáticos y herramientas internas para optimizar flujos de trabajo.</p>
+        </article>
+        <article class="bg-blue-700 p-6 rounded-2xl shadow-lg hover:scale-105 transition transform" data-aos="fade-left" data-magnetic>
+          <h4 class="text-xl font-bold mb-2">Proyectos educativos</h4>
+          <p>Diseño de juegos y actividades para enseñar programación a ingresantes de carreras tecnológicas.</p>
+        </article>
+      </div>
+    </div>
+  </section>
 
-    <!-- Frase -->
-    <section class="text-center py-16 px-6 bg-blue-900 bg-opacity-70" data-aos="zoom-in">
-        <blockquote class="text-2xl italic max-w-3xl mx-auto">
-            “Sé impecable con tus palabras, no tomes nada personalmente,  
-            no hagas suposiciones y haz siempre lo máximo que puedas.”
-        </blockquote>
-        <p class="mt-4 text-blue-300">Inspirado en “Los Cuatro Acuerdos”</p>
-    </section>
+  <!-- Frase -->
+  <section class="text-center py-16 px-6 bg-blue-900/70" data-aos="zoom-in">
+    <blockquote class="text-2xl italic max-w-3xl mx-auto">
+      “Sé impecable con tus palabras, no tomes nada personalmente,
+      no hagas suposiciones y haz siempre lo máximo que puedas.”
+    </blockquote>
+    <p class="mt-4 text-blue-300">Inspirado en “Los Cuatro Acuerdos”</p>
+  </section>
 
-    <!-- Contacto -->
-    <section id="contacto" class="py-16 px-6">
-        <div class="max-w-4xl mx-auto text-center" data-aos="fade-up">
-            <h3 class="text-3xl font-bold mb-6 border-b-2 border-blue-400 pb-2">Contacto</h3>
-            <p class="mb-4">📧 <a href="mailto:nicolas@example.com" class="text-blue-300 hover:underline">nicolas@example.com</a></p>
-            <a href="https://wa.me/549XXXXXXXXX" target="_blank" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg transition transform hover:scale-105">
-                Enviar WhatsApp
-            </a>
-        </div>
-    </section>
+  <!-- Contacto -->
+  <section id="contacto" class="py-16 px-6">
+    <div class="max-w-4xl mx-auto text-center" data-aos="fade-up">
+      <h3 class="text-3xl font-bold mb-6 border-b-2 border-blue-400 pb-2">Contacto</h3>
+      <p class="mb-4">📧 <a href="mailto:nicolas@example.com" class="text-blue-300 hover:underline" data-magnetic>nicolas@example.com</a></p>
+      <a href="https://wa.me/549XXXXXXXXX" target="_blank" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-semibold shadow-lg transition transform hover:scale-105 inline-block" data-magnetic>
+        Enviar WhatsApp
+      </a>
+    </div>
+  </section>
 
-    <!-- Footer -->
-    <footer class="bg-blue-800 text-center py-4 text-blue-300" data-aos="fade-up">
-        © <span id="year"></span> Nicolás Kappes - Todos los derechos reservados
-    </footer>
+  <!-- Footer -->
+  <footer class="bg-blue-800 text-center py-4 text-blue-300" data-aos="fade-up">
+    © <span id="year"></span> Nicolás Kappes - Todos los derechos reservados
+  </footer>
 
-    <!-- Scripts -->
-    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-    <script>
-        AOS.init({
-            duration: 1000,
-            once: true
-        });
-        document.getElementById("year").textContent = new Date().getFullYear();
-    </script>
+  <!-- Scripts -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({ duration: 1000, once: true });
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ===== Detectar dispositivos táctiles y desactivar efecto si corresponde
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (isTouch) {
+      document.documentElement.classList.add('is-touch');
+    }
+
+    // ===== Cursor personalizado (seguir cursor con suavizado)
+    const glow = document.querySelector('.nk-cursor-glow');
+    const dot = document.querySelector('.nk-cursor-dot');
+
+    if (!isTouch && glow && dot) {
+      let mouseX = window.innerWidth / 2;
+      let mouseY = window.innerHeight / 2;
+      let glowX = mouseX, glowY = mouseY;
+      let dotX = mouseX, dotY = mouseY;
+
+      const lerp = (a, b, n) => (1 - n) * a + n * b;
+
+      const onMove = (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      };
+
+      window.addEventListener('mousemove', onMove);
+
+      const render = () => {
+        // Suavizado distinto para glow (más lento) y dot (más rápido)
+        glowX = lerp(glowX, mouseX, 0.08);
+        glowY = lerp(glowY, mouseY, 0.08);
+        dotX = lerp(dotX, mouseX, 0.25);
+        dotY = lerp(dotY, mouseY, 0.25);
+
+        glow.style.transform = `translate(${glowX - 0.5}px, ${glowY - 0.5}px)`; // ya centrado por CSS (-50%, -50%)
+        glow.style.left = glowX + 'px';
+        glow.style.top  = glowY + 'px';
+
+        dot.style.left = dotX + 'px';
+        dot.style.top  = dotY + 'px';
+
+        requestAnimationFrame(render);
+      };
+      requestAnimationFrame(render);
+
+      // Retroalimentación en clic
+      window.addEventListener('mousedown', () => dot.classList.add('is-clicking'));
+      window.addEventListener('mouseup',   () => dot.classList.remove('is-clicking'));
+
+      // Ocultar cuando el mouse sale de la ventana
+      window.addEventListener('mouseleave', () => { dot.classList.add('is-hidden'); glow.classList.add('is-hidden'); });
+      window.addEventListener('mouseenter', () => { dot.classList.remove('is-hidden'); glow.classList.remove('is-hidden'); });
+    }
+
+    // ===== Efecto "magnético" suave en elementos con data-magnetic
+    const magneticElems = document.querySelectorAll('[data-magnetic]');
+    magneticElems.forEach((el) => {
+      const strength = 18; // fuerza en px
+      const speed = 0.2;   // rapidez de retorno
+      let rect, x = 0, y = 0, tx = 0, ty = 0;
+
+      const onEnter = () => { rect = el.getBoundingClientRect(); };
+      const onMove = (e) => {
+        if (!rect) rect = el.getBoundingClientRect();
+        const mx = e.clientX - rect.left; // pos dentro del elemento
+        const my = e.clientY - rect.top;
+        tx = ((mx - rect.width / 2) / (rect.width / 2)) * strength;
+        ty = ((my - rect.height / 2) / (rect.height / 2)) * strength;
+      };
+      const onLeave = () => { tx = 0; ty = 0; };
+
+      const loop = () => {
+        x += (tx - x) * speed;
+        y += (ty - y) * speed;
+        el.style.transform = `translate(${x}px, ${y}px)`;
+        requestAnimationFrame(loop);
+      };
+      loop();
+
+      el.addEventListener('mouseenter', onEnter);
+      el.addEventListener('mousemove', onMove);
+      el.addEventListener('mouseleave', onLeave);
+    });
+  </script>
 </body>
 </html>
